@@ -1,5 +1,4 @@
-import core from '@actions/core';
-import github from '@actions/github';
+import * as core from '@actions/core';
 
 const getAllTags = async (url) => {
   console.log(`Fetching ${url}`);
