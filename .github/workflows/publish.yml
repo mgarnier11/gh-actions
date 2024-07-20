@@ -34,13 +34,6 @@ jobs:
               cd ..
             fi
           done
-      - name: Delete all folders but dist
-        run: |
-          ls -la
-          { rm -rf *; tar -x; } <<< $(tar -c dist)
-          ls -la
-      - name: Move all built actions to the root folder
-        run: mv dist/* .
       - name: Commit changes to the latest branch
         # supprime la branche "latest" locale pour qu'elle soit recréée (avec le --force) avec les actions buildées à la dernière version
         run: |
