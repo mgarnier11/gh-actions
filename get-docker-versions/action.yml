@@ -11,10 +11,6 @@ inputs:
   image-name:
     description: "The image name"
     required: true
-  only-latest:
-    description: "Only return the latest version"
-    required: false
-    default: "false"
 runs:
   using: "node20"
   main: "main.js"
