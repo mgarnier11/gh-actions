@@ -1,0 +1,13 @@
+{
+  "name": "gh-actions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "package": "rm -rf ../dist/get-docker-versions && npm run build && cp action.yml ../dist/get-docker-versions",
+    "build": "esbuild src/main.ts --bundle --platform=node --outfile=../dist/get-docker-versions/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,50 @@
+name: Publish gh-actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-publish-on-latest-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build actions
+        run: |
+          for dir in $(ls -d */); do
+            if [ -f "$dir/package.json" ]; then
+              cd $dir
+              npm run package
+              cd ..
+            fi
+          done
+      - name: Delete all folders but dist
+        run: "{ rm -rf *; tar -x; } <<< $(tar -c dist)"
+      - name: Move all built actions to the root folder
+        run: mv dist/* .
+      - name: Commit changes to the latest branch
+        # supprime la branche "latest" locale pour qu'elle soit recréée (avec le --force) avec les actions buildées à la dernière version
+        run: |
+          git config --global user.email "mgarnier11's bot"
+          git config --global user.name "mgarnier11@gmail.com"
+          git branch -d latest || true
+          git checkout -b latest
+          git add .
+          git commit -m "Publish gh-actions"
+          git push origin latest --force
