@@ -9,10 +9,10 @@ jobs:
   build-and-publish-on-latest-branch:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          node-version: 20
+          ref: main
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
