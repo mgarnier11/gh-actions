@@ -30,7 +30,7 @@ runs:
         upgrade=${{ inputs.upgrade }}
         version=${{ inputs.version }}
 
-        if [ $version = "" ]; then
+        if [ -z "$version" ]; then
           version="0.0.0"
         fi
 
