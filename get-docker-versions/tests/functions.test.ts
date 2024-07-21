@@ -3,7 +3,6 @@ import { Tag } from 'get-docker-versions/src/types';
 import * as functions from '../src/functions';
 
 let fetchMock: jest.SpiedFunction<typeof global.fetch>;
-let getAllTagsMock: jest.SpiedFunction<typeof functions.exportFunctions.getAllTags>;
 
 const setFetchMock = (firstCallResult: any, secondCallResult: any) => {
   fetchMock = jest
@@ -15,21 +14,15 @@ const setFetchMock = (firstCallResult: any, secondCallResult: any) => {
 describe('functions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-
-    getAllTagsMock = jest.spyOn(functions.exportFunctions, 'getAllTags');
-  });
-
-  afterEach(() => {
-    getAllTagsMock.mockRestore();
   });
 
   describe('checkIfSemver', () => {
     it('should return true for a semver tag', () => {
-      expect(functions.exportFunctions.checkIfSemver('1.0.0')).toBe(true);
+      expect(functions.checkIfSemver('1.0.0')).toBe(true);
     });
 
     it('should return false for a non-semver tag', () => {
-      expect(functions.exportFunctions.checkIfSemver('latest')).toBe(false);
+      expect(functions.checkIfSemver('latest')).toBe(false);
     });
   });
 
@@ -47,7 +40,7 @@ describe('functions', () => {
       setFetchMock(firstCall, secondCall);
 
       // Act
-      const result = await functions.exportFunctions.getAllTags(url);
+      const result = await functions.getAllTags(url);
 
       // Assert
       expect(result).toEqual([
@@ -69,7 +62,7 @@ describe('functions', () => {
       setFetchMock(firstCall, undefined);
 
       // Act
-      const result = await functions.exportFunctions.getAllTags(url);
+      const result = await functions.getAllTags(url);
 
       // Assert
       expect(result).toEqual([{ name: 'latest', digest: 'sha256:123' }]);
@@ -90,7 +83,9 @@ describe('functions', () => {
         { name: '1.0.1', digest: 'sha256:123' },
         { name: '1.0.0', digest: 'sha256:456' },
       ];
-      getAllTagsMock.mockReturnValue(Promise.resolve(tags) as Promise<Tag[]>);
+      const getAllTagsMock = jest
+        .spyOn(functions, 'getAllTags')
+        .mockReturnValue(Promise.resolve(tags) as unknown as Promise<Tag[]>);
 
       // Act
       const result = await functions.getDockerVersions(apiUrl, imageAuthor, imageName);

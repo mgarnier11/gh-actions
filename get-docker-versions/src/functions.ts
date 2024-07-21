@@ -1,6 +1,6 @@
 import { DockerVersions, Tag } from './types';
 
-const getAllTags = async (url: string): Promise<Tag[]> => {
+export const getAllTags = async (url: string): Promise<Tag[]> => {
   console.log(`Fetching ${url}`);
 
   const response = await fetch(url);
@@ -13,7 +13,7 @@ const getAllTags = async (url: string): Promise<Tag[]> => {
   }
 };
 
-const checkIfSemver = (tagName: string): boolean => {
+export const checkIfSemver = (tagName: string): boolean => {
   // comes from : https://semver.org
   const semverRegex =
     /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
@@ -42,9 +42,4 @@ export const getDockerVersions = async (
     allVersions: allSemVersTags,
     allTags: allTags,
   };
-};
-
-export const exportFunctions = {
-  getAllTags,
-  checkIfSemver,
 };
