@@ -1,0 +1,32 @@
+name: Test all actions
+
+on:
+  push:
+
+jobs:
+  test-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Test actions
+        run: |
+          for dir in $(ls -d */); do
+            if [ -f "$dir/package.json" ]; then
+              cd $dir
+              npm run test
+              cd ..
+            fi
+          done

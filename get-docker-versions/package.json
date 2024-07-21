@@ -3,11 +3,32 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "package": "npm run build && rm -rf src package.json",
+    "test": "npx jest",
+    "package": "npm run test && npm run build && rm -rf src package.json",
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "jest": {
+    "preset": "ts-jest",
+    "verbose": true,
+    "clearMocks": true,
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "js",
+      "ts"
+    ],
+    "testMatch": [
+      "**/*.test.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
+  }
 }
