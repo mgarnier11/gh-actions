@@ -1,7 +1,9 @@
+import * as core from '@actions/core';
+
 import { DockerVersions, Tag } from './types';
 
 export const getAllTags = async (url: string): Promise<Tag[]> => {
-  console.log(`Fetching ${url}`);
+  core.info(`Fetching tags from ${url}`);
 
   const response = await fetch(url);
   const data = await response.json();
@@ -30,7 +32,7 @@ export const getDockerVersions = async (
 
   const tags = await getAllTags(url);
 
-  console.log(tags);
+  core.debug(`tags: ${JSON.stringify(tags)}`);
 
   const latestTag = tags.find((tag) => tag.name === 'latest');
   const latestImage = tags.find((tag) => tag.digest === latestTag?.digest && tag.name !== 'latest');
