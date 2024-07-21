@@ -30,5 +30,8 @@
     "transform": {
       "^.+\\.ts$": "ts-jest"
     }
+  },
+  "dependencies": {
+    "compare-versions": "^6.1.1"
   }
 }

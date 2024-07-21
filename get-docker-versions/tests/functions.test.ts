@@ -101,5 +101,32 @@ describe('functions', () => {
       expect(getAllTagsMock).toHaveBeenCalledTimes(1);
       expect(getAllTagsMock).toHaveBeenCalledWith(`${apiUrl}/${imageAuthor}/${imageName}/tags`);
     });
+
+    it('should return correct data when the latest tag is not found', async () => {
+      // Arrange
+      const apiUrl = 'api-url';
+      const imageAuthor = 'image-author';
+      const imageName = 'image-name';
+      const tags = [
+        { name: '1.0.1', digest: 'sha256:123' },
+        { name: '1.0.0', digest: 'sha256:456' },
+      ];
+      const getAllTagsMock = jest
+        .spyOn(functions, 'getAllTags')
+        .mockReturnValue(Promise.resolve(tags) as unknown as Promise<Tag[]>);
+
+      // Act
+      const result = await functions.getDockerVersions(apiUrl, imageAuthor, imageName);
+
+      // Assert
+      expect(result).toEqual({
+        latestVersion: '1.0.1',
+        allVersions: ['1.0.1', '1.0.0'],
+        allTags: ['1.0.1', '1.0.0'],
+      });
+
+      expect(getAllTagsMock).toHaveBeenCalledTimes(1);
+      expect(getAllTagsMock).toHaveBeenCalledWith(`${apiUrl}/${imageAuthor}/${imageName}/tags`);
+    });
   });
 });

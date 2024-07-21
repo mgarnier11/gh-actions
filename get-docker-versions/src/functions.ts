@@ -1,3 +1,5 @@
+import { compareVersions } from 'compare-versions';
+
 import * as core from '@actions/core';
 
 import { DockerVersions, Tag } from './types';
@@ -35,13 +37,14 @@ export const getDockerVersions = async (
   core.debug(`tags: ${JSON.stringify(tags)}`);
 
   const latestTag = tags.find((tag) => tag.name === 'latest');
-  const latestImage = tags.find((tag) => tag.digest === latestTag?.digest && tag.name !== 'latest');
-  const allSemVersTags = tags.map((tag) => tag.name).filter((tagName) => checkIfSemver(tagName));
-  const allTags = tags.map((tag) => tag.name);
+
+  const allSemVersTags = tags.filter((tag) => checkIfSemver(tag.name)).sort((a, b) => compareVersions(b.name, a.name));
+  const latestImage =
+    tags.find((tag) => tag.digest === latestTag?.digest && tag.name !== 'latest') ?? allSemVersTags[0];
 
   return {
     latestVersion: latestImage?.name ?? '',
-    allVersions: allSemVersTags,
-    allTags: allTags,
+    allVersions: allSemVersTags.map((tag) => tag.name),
+    allTags: tags.map((tag) => tag.name),
   };
 };
