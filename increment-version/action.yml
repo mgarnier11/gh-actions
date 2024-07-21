@@ -4,6 +4,7 @@ inputs:
   version:
     required: true
     description: "Version to increment"
+    default: "0.0.0"
   upgrade:
     required: false
     description: "Type of incrementation (major, minor, patch, false)"
