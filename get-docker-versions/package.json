@@ -5,7 +5,7 @@
   "scripts": {
     "test": "npx jest",
     "package": "npm run test && npm run build && rm -rf tests src package.json",
-    "build": "esbuild src/main.ts --bundle --platform=node --outfile=main.js"
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=index.js"
   },
   "keywords": [],
   "author": "",
