@@ -8,7 +8,15 @@ export const main = async () => {
     const imageAuthor = core.getInput('image-author');
     const imageName = core.getInput('image-name');
 
+    core.debug(`apiUrl: ${apiUrl}`);
+    core.debug(`imageAuthor: ${imageAuthor}`);
+    core.debug(`imageName: ${imageName}`);
+
     const result = await getDockerVersions(apiUrl, imageAuthor, imageName);
+
+    core.debug(
+      `latestVersion: ${result.latestVersion}, allVersions: ${result.allVersions}, allTags: ${result.allTags}`
+    );
 
     core.setOutput('latest-version', result.latestVersion);
     core.setOutput('all-versions', result.allVersions);
