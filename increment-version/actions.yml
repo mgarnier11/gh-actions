@@ -1,0 +1,45 @@
+name: "Increment version"
+description: "Increment the version passed as input"
+inputs:
+  version:
+    required: true
+    description: "Version to increment"
+  upgrade:
+    required: false
+    description: "Type of incrementation (major, minor, patch, false)"
+    default: "false"
+outputs:
+  new-version:
+    value: ${{ steps.increment-version.outputs.new-version }}
+    description: "New version after incrementation"
+runs:
+  using: "composite"
+  steps:
+    - name: Increment version
+      id: increment-version
+      run: |
+        increment_version() {
+          local delimiter=.
+          local array=($(echo "$1" | tr $delimiter '\n'))
+          array[$2]=$((array[$2]+1))
+          if [ $2 -lt 2 ]; then array[2]=0; fi
+          if [ $2 -lt 1 ]; then array[1]=0; fi
+          echo $(local IFS=$delimiter ; echo "${array[*]}")
+        }
+
+        upgrade=${{ inputs.upgrade }}
+        version=${{ inputs.version }}
+
+        if [ $upgrade = "major" ]; then
+          new_version=$(increment_version $version 0)
+        elif [ $upgrade = "minor" ]; then
+          new_version=$(increment_version $version 1)
+        elif [ $upgrade = "patch" ]; then
+          new_version=$(increment_version $version 2)
+        else
+          new_version=$version
+        fi
+
+        echo "new-version=$new_version" >> $GITHUB_OUTPUT
+
+      shell: bash
